@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZWA GT - YOUTUBE GIVEAWAY</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: white; overflow-x: hidden; }
+        .glass-card { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 35px; }
+        .thr-gradient { background: linear-gradient(135deg, #fbbf24 0%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .yt-red { background: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.3); }
+        .btn-join { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+
+    <div class="w-full max-w-md glass-card p-10 opacity-0 scale-95" id="main-app">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-black tracking-tighter thr-gradient">AZWA GT</h1>
+            <p class="text-[10px] text-gray-500 tracking-[0.4em] uppercase font-bold mt-2">Special Giveaway System</p>
+        </div>
+
+        <div id="yt-gate" class="text-center space-y-6">
+            <div class="p-5 bg-white/5 rounded-3xl border border-white/10">
+                <p class="text-sm text-gray-300 mb-4">Wajib Subscribe YouTube <br><b class="text-white">AZWA GT</b> Untuk Ikutan!</p>
+                <a href="https://youtube.com/@azwagt?si=xFRQp-zTuI4byYxS" target="_blank" onclick="showVerifyBtn()" class="inline-block w-full yt-red text-white font-black py-4 rounded-2xl active:scale-95 transition-all text-sm tracking-widest">
+                    SUBSCRIBE SEKARANG!
+                </a>
+            </div>
+            <button id="verify-btn" onclick="unlockForm()" class="hidden w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3 rounded-2xl border border-white/20 text-xs transition-all">
+                SAYA SUDAH SUBSCRIBE ✅
+            </button>
+        </div>
+
+        <div id="form-join" class="hidden space-y-5">
+            <input type="text" id="growid" placeholder="GrowID Kamu" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-yellow-500 transition-all text-sm">
+            <input type="text" id="world" placeholder="Taruh Donation Atau Display" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none focus:border-yellow-500 transition-all text-sm">
+            
+            <button onclick="validaJoin()" id="btn-text" class="w-full btn-join text-black font-black py-5 rounded-2xl shadow-xl active:scale-95 text-sm tracking-widest">
+                GASS JOIN THR 🔥
+            </button>
+        </div>
+
+        <div class="mt-12 pt-8 border-t border-white/5">
+            <div id="status-box" class="h-16 bg-black/40 rounded-3xl flex flex-col items-center justify-center border border-white/5 overflow-hidden">
+                <div id="rotator" class="text-center">
+                    <h2 id="view-id" class="text-lg font-black text-yellow-500 italic uppercase">GATEWAY ACTIVE</h2>
+                    <p id="view-world" class="text-[9px] text-gray-500 uppercase font-bold tracking-widest">SUB TO UNLOCK FORM</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const WEBHOOK_URL = "https://discord.com/api/webhooks/1485118600841924719/FfK7XqNSq3iE6Nbcg76PsHD2WO5ZfPOZvS6eR1VII2cfxm6XUUchf9e5rlSfw1mrJk_-";
+        const PROFIL_URL = "https://cdn.discordapp.com/attachments/1483994331428950188/1485121042098819113/IMG_9580.jpg?ex=69c0b640&is=69bf64c0&hm=e95cef47ab23c7190f5dd5822b414263965afc9cd7828ed275746183e307d3c0&";
+
+        let dataPeserta = [];
+        let curIdx = 0;
+
+        window.onload = () => { gsap.to("#main-app", { opacity: 1, scale: 1, duration: 1, ease: "expo.out" }); };
+
+        // Munculin tombol konfirmasi setelah klik subscribe
+        function showVerifyBtn() {
+            setTimeout(() => {
+                document.getElementById('verify-btn').classList.remove('hidden');
+                gsap.from("#verify-btn", { y: 10, opacity: 0, duration: 0.5 });
+            }, 2000);
+        }
+
+        // Buka Form
+        function unlockForm() {
+            gsap.to("#yt-gate", { opacity: 0, y: -20, duration: 0.5, onComplete: () => {
+                document.getElementById('yt-gate').classList.add('hidden');
+                document.getElementById('form-join').classList.remove('hidden');
+                gsap.from("#form-join", { opacity: 0, y: 20, duration: 0.5 });
+                
+                document.getElementById('view-id').innerText = "WAITING...";
+                document.getElementById('view-world').innerText = "INPUT YOUR DATA";
+            }});
+        }
+
+        function validaJoin() {
+            const gid = document.getElementById('growid').value.trim();
+            const wrl = document.getElementById('world').value.trim();
+
+            if(!gid || !wrl) return Swal.fire({ icon: 'error', title: 'Data Kosong!', background: '#111', color: '#fff' });
+
+            Swal.fire({
+                title: 'Data Sudah Benar?',
+                text: `${gid} @ ${wrl}`,
+                showCancelButton: true,
+                confirmButtonText: 'YA, KIRIM!',
+                background: '#111', color: '#fff', confirmButtonColor: '#fbbf24'
+            }).then(res => { if(res.isConfirmed) kirimKeServer(gid, wrl); });
+        }
+
+        async function kirimKeServer(gid, wrl) {
+            const btn = document.getElementById('btn-text');
+            btn.disabled = true;
+            btn.innerText = "SENDING...";
+
+            dataPeserta.push({ gid, wrl });
+            let listStr = dataPeserta.map((p, i) => `**#${i+1}** | **${p.gid}** (World: \`${p.wrl}\`)`).join('\n');
+
+            const payload = {
+                username: "AZWA GT - THR SYSTEM",
+                avatar_url: PROFIL_URL, 
+                embeds: [
+                    {
+                        title: "🚀 PENDAFTAR BARU (SUBSCRIBED!)",
+                        description: `User ini sudah melewati Gateway YouTube AZWA GT.`,
+                        color: 16711680,
+                        thumbnail: { url: PROFIL_URL },
+                        fields: [
+                            { name: "👤 GrowID", value: `**${gid}**`, inline: true },
+                            { name: "🌎 World", value: `**${wrl}**`, inline: true },
+                            { name: "✅ Status", value: "Verified Subscriber", inline: false }
+                        ],
+                        footer: { text: "Azwa GT Digital System" },
+                        timestamp: new Date()
+                    },
+                    {
+                        title: "📋 DAFTAR REKAP TERBARU",
+                        description: listStr,
+                        color: 16762880, 
+                        footer: { text: "Visit YouTube: @azwagt" }
+                    }
+                ]
+            };
+
+            try {
+                await fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                Swal.fire({ icon: 'success', title: 'SENT!', background: '#111', color: '#fff', timer: 1500, showConfirmButton: false });
+                document.getElementById('growid').value = "";
+                document.getElementById('world').value = "";
+                startRotation();
+            } catch(e) { console.error(e); }
+
+            btn.disabled = false;
+            btn.innerText = "GASS JOIN THR 🔥";
+        }
+
+        function startRotation() {
+            if(window.timer) clearInterval(window.timer);
+            const rotate = () => {
+                const p = dataPeserta[curIdx];
+                const box = document.getElementById('rotator');
+                gsap.to(box, { opacity: 0, duration: 0.5, onComplete: () => {
+                    document.getElementById('view-id').innerText = p.gid.toUpperCase();
+                    document.getElementById('view-world').innerText = "WORLD: " + p.wrl.toUpperCase();
+                    gsap.to(box, { opacity: 1, duration: 0.5 });
+                }});
+                curIdx = (curIdx + 1) % dataPeserta.length;
+            };
+            rotate();
+            window.timer = setInterval(rotate, 4000);
+        }
+    </script>
+</body>
+</html>
